@@ -1,6 +1,5 @@
 #include "circular.h"
 
-__inline__
 void circbuf_free(t_circbuf *cb)
 {
     free(cb->buf);
@@ -32,19 +31,18 @@ t_circbuf *circbuf_create(unsigned int nbcell, unsigned int elesize)
     return (tmp);
 }
 
-unsigned int circbuf_write(t_circbuf *cb, void *toput)
+unsigned int circbuf_write(t_circbuf* cb, void* toput)
 {
-    if (cb->canwrite)
-    {
-        memcpy(cb->buf + cb->writepos, toput, cb->elesize);
-        cb->writepos += cb->elesize;
-        if (cb->writepos == cb->bufsize)
-            cb->writepos = 0;
-        if (cb->writepos == cb->readpos)
-            cb->canwrite = 0;
-        return (1);        
-    }
+  if (!cb->canwrite)
     return (0);
+  memcpy(cb->buf + cb->writepos, toput, cb->elesize);
+  cb->writepos += cb->elesize;
+  if (cb->writepos == cb->bufsize)
+    cb->writepos = 0;
+  //if (cb->writepos == cb->readpos)
+  //  cb->canwrite = 0;
+    cb->canwrite = !(cb->writepos == cb->readpos);
+  return (1);
 }
 
 unsigned int circbuf_read(t_circbuf *cb, void *dest)
@@ -75,4 +73,5 @@ int main()
         printf("%d\n", c);
     }
     printf("%d\n", *(int *)((char *)tmp->buf + 0));
+    circbuf_free(tmp);
 }
