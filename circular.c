@@ -39,22 +39,20 @@ unsigned int circbuf_write(t_circbuf* cb, void* toput)
   cb->writepos += cb->elesize;
   if (cb->writepos == cb->bufsize)
     cb->writepos = 0;
-  //if (cb->writepos == cb->readpos)
-  //  cb->canwrite = 0;
-    cb->canwrite = !(cb->writepos == cb->readpos);
+  cb->canwrite = !(cb->writepos == cb->readpos);
   return (1);
 }
 
 unsigned int circbuf_read(t_circbuf *cb, void *dest)
 {
-    if (cb->canwrite == 1 && cb->writepos == cb->readpos)
-        return (0);
-    memcpy(dest, cb->buf + cb->readpos, cb->elesize);
-    cb->readpos += cb->elesize;
-    if (cb->readpos == cb->bufsize)
-        cb->readpos = 0;
-    cb->canwrite = 1;
-    return (1);
+  if (cb->canwrite == 1 && cb->writepos == cb->readpos)
+    return (0);
+  memcpy(dest, cb->buf + cb->readpos, cb->elesize);
+  cb->readpos += cb->elesize;
+  if (cb->readpos == cb->bufsize)
+    cb->readpos = 0;
+  cb->canwrite = 1;
+  return (1);
 }
 
 int main()
