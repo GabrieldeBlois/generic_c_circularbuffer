@@ -39,7 +39,7 @@ unsigned int circbuf_write(t_circbuf* cb, void* toput)
   cb->writepos += cb->elesize;
   if (cb->writepos == cb->bufsize)
     cb->writepos = 0;
-  cb->canwrite = !(cb->writepos == cb->readpos);
+  cb->canwrite = (cb->writepos != cb->readpos);
   return (1);
 }
 
