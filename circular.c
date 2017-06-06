@@ -6,7 +6,7 @@ void circbuf_free(t_circbuf *cb)
     free(cb);
 }
 
-void circbuf_init(t_circbuf *cb, unsigned int nbcell, unsigned int elesize)
+void circbuf_init(t_circbuf *cb, uint32_t nbcell, uint32_t elesize)
 {
     cb->nbcell = nbcell;
     cb->elesize = elesize;
@@ -21,7 +21,7 @@ void circbuf_init(t_circbuf *cb, unsigned int nbcell, unsigned int elesize)
     }
 }
 
-t_circbuf *circbuf_create(unsigned int nbcell, unsigned int elesize)
+t_circbuf *circbuf_create(uint32_t nbcell, uint32_t elesize)
 {
     t_circbuf *tmp;
 
@@ -31,45 +31,26 @@ t_circbuf *circbuf_create(unsigned int nbcell, unsigned int elesize)
     return (tmp);
 }
 
-unsigned int circbuf_write(t_circbuf* cb, void* toput)
+t_circbuf_bool circbuf_write(t_circbuf* cb, void* toput)
 {
   if (!cb->canwrite)
-    return (0);
+    return (CIRCBUF_FALSE);
   memcpy(cb->buf + cb->writepos, toput, cb->elesize);
   cb->writepos += cb->elesize;
   if (cb->writepos == cb->bufsize)
-    cb->writepos = 0;
+    cb->writepos = CIRCBUF_FALSE;
   cb->canwrite = (cb->writepos != cb->readpos);
-  return (1);
+  return (CIRCBUF_TRUE);
 }
 
-unsigned int circbuf_read(t_circbuf *cb, void *dest)
+t_circbuf_bool circbuf_read(t_circbuf *cb, void *dest)
 {
-  if (cb->canwrite == 1 && cb->writepos == cb->readpos)
-    return (0);
+  if (cb->canwrite == CIRCBUF_TRUE && cb->writepos == cb->readpos)
+    return (CIRCBUF_FALSE);
   memcpy(dest, cb->buf + cb->readpos, cb->elesize);
   cb->readpos += cb->elesize;
   if (cb->readpos == cb->bufsize)
-    cb->readpos = 0;
-  cb->canwrite = 1;
-  return (1);
-}
-
-int main()
-{
-    t_circbuf *tmp;
-
-    tmp = circbuf_create(24, sizeof(int));
-    for (int i = 0; i < 30; ++i)
-    {
-        printf("return: %d for i = %d\n", circbuf_write(tmp, &i), i);
-    }
-    int c = 0;
-    for (int i = 0; i < 30; ++i)
-    {
-        printf("return: %d for i = %d && a = ", circbuf_read(tmp, &c), i);
-        printf("%d\n", c);
-    }
-    printf("%d\n", *(int *)((char *)tmp->buf + 0));
-    circbuf_free(tmp);
+    cb->readpos = CIRCBUF_FALSE;
+  cb->canwrite = CIRCBUF_TRUE;
+  return (CIRCBUF_TRUE);
 }
