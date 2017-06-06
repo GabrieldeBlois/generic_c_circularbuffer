@@ -1,3 +1,13 @@
+/*
+** circular.c for t in /home/gaby/Documents/dev/generic_c_circularbuffer
+**
+** Made by gaby
+** Login   <gabriel.de-blois@epitech.eu>
+**
+** Started on  Tue Jun  6 19:32:01 2017 gaby
+** Last update Tue Jun  6 19:32:09 2017 gaby
+*/
+
 #include "circular.h"
 
 void circbuf_free(t_circbuf *cb)
@@ -6,7 +16,7 @@ void circbuf_free(t_circbuf *cb)
     free(cb);
 }
 
-void circbuf_init(t_circbuf *cb, uint32_t nbcell, uint32_t elesize)
+void circbuf_init(t_circbuf *cb, uint16_t nbcell, uint16_t elesize)
 {
     cb->nbcell = nbcell;
     cb->elesize = elesize;
@@ -21,7 +31,7 @@ void circbuf_init(t_circbuf *cb, uint32_t nbcell, uint32_t elesize)
     }
 }
 
-t_circbuf *circbuf_create(uint32_t nbcell, uint32_t elesize)
+t_circbuf *circbuf_create(uint16_t nbcell, uint16_t elesize)
 {
     t_circbuf *tmp;
 
@@ -50,7 +60,7 @@ t_circbuf_bool circbuf_read(t_circbuf *cb, void *dest)
   memcpy(dest, cb->buf + cb->readpos, cb->elesize);
   cb->readpos += cb->elesize;
   if (cb->readpos == cb->bufsize)
-    cb->readpos = CIRCBUF_FALSE;
+    cb->readpos = 0;
   cb->canwrite = CIRCBUF_TRUE;
   return (CIRCBUF_TRUE);
 }

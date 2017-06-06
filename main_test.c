@@ -12,6 +12,6 @@ int main() {
     printf("return: %d for i = %d && a = ", circbuf_read(tmp, &c), i);
     printf("%d\n", c);
   }
-  printf("%d\n", *(int*)((char*)tmp->buf + 0));
+  //printf("%d\n", *(int*)((char*)tmp->buf + 0));
   circbuf_free(tmp);
 }
