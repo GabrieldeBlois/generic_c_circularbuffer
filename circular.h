@@ -8,8 +8,8 @@
 ** Last update Tue Jun  6 19:32:23 2017 gaby
 */
 
-#ifndef CIRCULAR_H_
-#define CIRCULAR_H_
+#ifndef CIRCBUF_H_
+#define CIRCBUF_H_
 
 #include <stdlib.h>
 #include <errno.h>
